@@ -91,3 +91,37 @@ else:
     st.divider()
     st.subheader("📋 Bảng Dữ Liệu Chi Tiết (34 Tỉnh/Thành)")
     st.dataframe(df_sorted, use_container_width=True)
+
+    # --- 6. PHÂN TÍCH THỐNG KÊ CHUYÊN SÂU (ADVANCED ANALYTICS) ---
+    st.divider()
+    st.subheader("📈 Phân tích Thống kê chuyên sâu (Advanced Analytics)")
+    
+    col3, col4 = st.columns(2)
+    
+    with col3:
+        st.markdown("**Ma trận Tương quan (Correlation Matrix)**")
+        st.markdown("Đánh giá mức độ quan hệ tuyến tính giữa các rủi ro logistics.")
+        
+        # Tính toán ma trận tương quan cho 3 biến cốt lõi
+        cols_corr = ['Chi phí hành chính', 'Chi phí không chính thức', 'Thiết chế pháp lý']
+        corr_matrix = df[cols_corr].corr().round(2)
+        
+        # Vẽ Heatmap bằng Plotly Express
+        fig_corr = px.imshow(
+            corr_matrix, 
+            text_auto=True, 
+            aspect="auto", 
+            color_continuous_scale='RdBu_r',
+            title="Sự tương quan giữa các chỉ số PCI"
+        )
+        st.plotly_chart(fig_corr, use_container_width=True)
+
+    with col4:
+        st.markdown("**Thống kê Mô tả (Descriptive Statistics)**")
+        st.markdown("Phân phối dữ liệu (thang điểm 0-10) của 34 địa phương.")
+        
+        # Lập bảng thống kê mô tả
+        stats_df = df[['Chi phí hành chính', 'Chi phí không chính thức', 'Thiết chế pháp lý']].describe().round(2)
+        st.dataframe(stats_df, use_container_width=True)
+        
+        st.info("💡 **Hàm ý quản trị:** Độ lệch chuẩn (std) của các biến cho thấy mức độ chênh lệch rủi ro giữa các địa phương. Độ lệch chuẩn càng cao, việc dùng Big Data để chọn lọc vị trí đặt kho bãi càng mang lại lợi thế cạnh tranh lớn.")
